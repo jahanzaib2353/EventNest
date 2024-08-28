@@ -1,11 +1,250 @@
 body {
   margin: 0;
+  padding-top: 70px; /* Adjust this value to match the height of your header */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Header styles */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Make sure header stays on top */
+  background-color: #fff; /* White background for the header */
+  border-bottom: 1px solid #ddd; /* Light border for separation */
+  padding: 0.5rem 1.5rem; /* Increased padding for the navbar */
+}
+
+.navbar-brand h1 {
+  font-size: 1.5rem; /* Adjust font size as needed */
+}
+
+.navbar-toggler {
+  border: none; /* Remove border from the toggle button */
+}
+
+.navbar-toggler-icon {
+  background-color: #000; /* Set a custom color for the hamburger icon */
+  width: 30px;
+  height: 3px;
+  display: block;
+  margin: 6px auto;
+}
+
+.navbar-nav .nav-link {
+  padding: 0.5rem 1rem; /* Adjust padding for links */
+}
+
+.navbar-nav .btn {
+  margin-left: 0.5rem; /* Margin between buttons */
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    flex-direction: column;
+    align-items: center; /* Center items on collapse */
+  }
+
+  .navbar-nav {
+    margin-top: 0.5rem; /* Margin for nav items */
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-nav .nav-item {
+    width: 100%;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.75rem 1rem; /* Adjust padding for links on small screens */
+  }
+
+  .navbar-toggler {
+    margin-right: 1rem; /* Margin for the toggle button */
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-brand h1 {
+    font-size: 1.25rem; /* Adjust font size on very small screens */
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.875rem; /* Adjust font size for small screens */
+  }
+
+  .navbar-nav .btn {
+    margin-left: 0.5rem; /* Margin between buttons */
+    margin-right: 1rem; /* Add padding from the right side */
+  }
+}
+
+
+
+
+/* Event home page */
+.event-home-page {
+  background-color: #f8f9fa; /* Light background color */
+  min-height: 100vh;
+}
+
+/* Hero section */
+.hero-section {
+  background: linear-gradient(135deg, #6a82fb, #fc5c7d); /* Gradient background */
+  padding: 60px 20px;
+  border-radius: 0 0 50% 50% / 5%;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: #6a82fb;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: #fc5c7d;
+  border: none;
+}
+
+.btn-lg {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* Text alignment */
+.text-center {
+  text-align: center;
+}
+
+
+/*Event homepage*/
+.event-home-page {
+  background-color: #f8f9fa; /* Light background color */
+  min-height: 100vh;
+}
+
+.carousel-item {
+    height: 500px;
+    background-color: hsl(326, 52%, 88%);
+    color: white;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    opacity: 0.8;
+}
+
+.carousel-caption-custom {
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d); /* Same gradient as hero-section */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.carousel-caption-custom h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.carousel-caption-custom p {
+    font-size: 1.25rem;
+    margin-top: 15px;
+}
+
+.carousel-caption-custom button {
+    margin-top: 20px;
+}
+
+.btn-primary {
+  background-color: #6a82fb;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: #fc5c7d;
+  border: none;
+}
+
+.btn-lg {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+
+/*Attendee registration page*/
+.register-attendee-page {
+  background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+  min-height: 100vh;
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.text-uppercase {
+  letter-spacing: 1px;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  transition: background 0.3s ease;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #fc5c7d, #6a82fb);
+}
+
+.login-link {
+  color: #6a82fb;
+}
+
+.login-link:hover {
+  color: #fc5c7d;
+  text-decoration: none;
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -199,3 +438,203 @@ html, body {
 }
 
 
+/* General Styling */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #f8f9fa; /* Matches EventHome page background */
+}
+
+.homepage {
+  background-color: #f8f9fa; /* Light background color */
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #6a82fb, #fc5c7d); /* Gradient background */
+  padding: 60px 20px;
+  border-radius: 0 0 50% 50% / 5%;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+.text-content h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.text-content p {
+  font-size: 1.25rem;
+  margin-top: 20px;
+}
+
+.hero-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+
+/* edit user css*/
+.edit-user-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.edit-user-card {
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.edit-user-card h2 {
+  color: #6c5b7b;
+}
+
+.form-label {
+  color: #333;
+}
+
+.btn-primary {
+  background-color: #6c5b7b;
+  border-color: #6c5b7b;
+}
+
+.btn-primary:hover {
+  background-color: #5a4b6f;
+  border-color: #5a4b6f;
+}
+
+/* Wrapper for the authentication form */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f7f7;
+}
+
+/* Inner container for the form */
+.auth-inner {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form headings */
+h3 {
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #4b49ac;
+  text-align: center;
+}
+
+/* Form control styling */
+.form-control {
+  height: 45px;
+  padding: 10px;
+  font-size: 14px;
+  color: #6c757d;
+  background-color: #f7f7f7;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.form-control:focus {
+  border-color: #4b49ac;
+  background-color: #ffffff;
+  box-shadow: none;
+}
+
+/* Form group margins */
+.mb-3 {
+  margin-bottom: 16px;
+}
+
+/* Button styling */
+.btn {
+  background-color: #4b49ac;
+  border-color: #4b49ac;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #3a38a1;
+  border-color: #3a38a1;
+}
+
+/* Error message styling */
+.alert {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #e74c3c;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
+
+/* Adjust column width if necessary */
+.col-md-6 {
+  max-width: 100%;
+}
+
+.container {
+  max-width: 90%; /* Adjust as needed to match the EditUser width */
+}
+
+.row {
+  justify-content: center;
+}
+
+
+/*Footer css*/
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+}
+
+footer {
+  background-color: #f8f9fa; /* Optional: Background color for the footer */
+  padding: 10px 0; /* Optional: Padding for the footer */
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'; // Assuming you're using react-bootstrap
+import { Form, Button, Card, Alert } from 'react-bootstrap';
 
 export default function EditUser() {
-    const { id } = useParams(); 
+    const { id } = useParams();
     const [username, setUsername] = useState('');
     const [status, setStatus] = useState('');
     const [email, setEmail] = useState('');
@@ -12,20 +12,22 @@ export default function EditUser() {
     const [preferences, setPreferences] = useState('');
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        if (id) {
+            fetchUser();
+        }
+    }, [id]);
+
     const fetchUser = async () => {
         try {
             const token = localStorage.getItem('token');
-            console.log('Using token:', token); // Debugging statement
-    
             const response = await axios.get(`/api/users/user/${id}/`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                },
             });
-    
-            console.log('Fetched user data:', response.data); // Debugging statement
-    
+
             const user = response.data;
             if (user) {
                 setUsername(user.username || '');
@@ -33,21 +35,12 @@ export default function EditUser() {
                 setEmail(user.email || '');
                 setOrganization_name(user.organization_name || '');
                 setPreferences(user.preferences || '');
-            } else {
-                console.error('No user data received');
             }
         } catch (err) {
             const errorMessage = err.response?.data?.error || 'An unexpected error occurred.';
             setError(errorMessage);
-            console.error('Error during fetching:', err.response ? err.response.data : err.message);
         }
     };
-    useEffect(() => {
-        if (id) {
-            fetchUser();
-        }
-    }, [id]);
-        
 
     const handleEditUser = async (e) => {
         e.preventDefault();
@@ -58,12 +51,12 @@ export default function EditUser() {
                 email,
                 status,
                 organization_name,
-                preferences
+                preferences,
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                },
             });
 
             if (response.status === 200) {
@@ -74,78 +67,78 @@ export default function EditUser() {
         } catch (err) {
             const errorMessage = err.response?.data?.error || 'An unexpected error occurred.';
             setError(errorMessage);
-            console.error('Error during update:', err.response ? err.response.data : err.message);
         }
     };
 
     return (
-        <div>
-            <Container className="mt-3">
-                <Row className="justify-content-center">
-                    <Col md={6}>
-                        <h2>Edit User</h2>
-                        <Form onSubmit={handleEditUser}>
-                            <Form.Group controlId="formUsername">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                />
-                            </Form.Group>
+        <div className="edit-user-page">
+            <Card className="edit-user-card" >
+                <Card.Body>
+                    <h2 className="text-center mb-4">Edit User</h2>
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    <Form onSubmit={handleEditUser}>
+                        <Form.Group id="username">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
 
-                            <Form.Group controlId="formStatus">
-                                <Form.Label>Status</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    value={status}
-                                    onChange={(e) => setStatus(e.target.value)}
-                                >
-                                    <option value="">Select status</option>
-                                    <option value="attendee">Attendee</option>
-                                    <option value="organizer">Organizer</option>
-                                </Form.Control>
-                            </Form.Group>
+                        <Form.Group id="status" className="mt-3">
+                            <Form.Label>Status</Form.Label>
+                            <Form.Control
+                                as="select"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                required
+                            >
+                                <option value="">Select status</option>
+                                <option value="attendee">Attendee</option>
+                                <option value="organizer">Organizer</option>
+                            </Form.Control>
+                        </Form.Group>
 
-                            <Form.Group controlId="formEmail">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    placeholder="Enter email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </Form.Group>
+                        <Form.Group id="email" className="mt-3">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="Enter email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
 
-                            <Form.Group controlId="formOrganization">
-                                <Form.Label>Organization Name</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter organization name"
-                                    value={organization_name}
-                                    onChange={(e) => setOrganization_name(e.target.value)}
-                                />
-                            </Form.Group>
+                        <Form.Group id="organization_name" className="mt-3">
+                            <Form.Label>Organization Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter organization name"
+                                value={organization_name}
+                                onChange={(e) => setOrganization_name(e.target.value)}
+                            />
+                        </Form.Group>
 
-                            <Form.Group controlId="formPreferences">
-                                <Form.Label>Preferences</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter preferences"
-                                    value={preferences}
-                                    onChange={(e) => setPreferences(e.target.value)}
-                                />
-                            </Form.Group>
+                        <Form.Group id="preferences" className="mt-3">
+                            <Form.Label>Preferences</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter preferences"
+                                value={preferences}
+                                onChange={(e) => setPreferences(e.target.value)}
+                            />
+                        </Form.Group>
 
-                            <Button className='mt-3' variant="primary" type="submit">
-                                Submit
-                            </Button>
-                        </Form>
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                    </Col>
-                </Row>
-            </Container>  
+                        <Button type="submit" className="w-100 mt-4" variant="primary">
+                            Update User
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
         </div>
     );
 }

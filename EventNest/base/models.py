@@ -13,8 +13,6 @@ class EventUser(AbstractUser):
     organization_name = models.CharField(max_length=255, null=True, blank=True)
     preferences = models.JSONField(null=True, blank=True)
 
-    # groups = models.ManyToManyField(Group, related_name='event_user_groups')
-    # user_permissions = models.ManyToManyField(Permission, related_name='event_user_permissions')
 
     def __str__(self):
         return self.username

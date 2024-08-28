@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is included
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -12,11 +11,10 @@ export default function Header() {
       try {
         const token = localStorage.getItem('token');
         if (token) {
-          // Check if token is valid by making a request to an authenticated endpoint
           await axios.get('/api/users/profile/', {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
+              'Authorization': `Bearer ${token}`,
             },
             withCredentials: true,
           });
@@ -38,38 +36,40 @@ export default function Header() {
   };
 
   return (
-    <div className="container-fluid header position-relative overflow-hidden p-0">
-      <nav className="navbar navbar-expand-lg fixed-top navbar-light px-4 px-lg-5 py-3 py-lg-0">
-        <Link className="navbar-brand p-0" to="/">
+    <div className="container-fluid p-0">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light header">
+        <Link className="navbar-brand" to="/">
           <h1 className="display-6 text-primary m-0">
             <i className="fas fa-envelope me-3"></i>EventNest
           </h1>
-          {/* <img src="/logoEvent.png" alt="Logo" style={{ width: '50px', height: '50px', marginLeft: '30px' }} /> */}
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-          <span className="fa fa-bars"></span>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
-          <div className="navbar-nav ms-auto py-0">
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             {isLoggedIn ? (
               <>
-                <Link className="nav-item nav-link active" to="/event-home">Events</Link>
-                <Link className="nav-item nav-link" to="/profile">Profile</Link>
-                <Link className="nav-item nav-link" to="/analytics">Analytics</Link>
-                {/* Add other links for logged-in users */}
+                <li className="nav-item dropdown">
+                  <Link className="nav-link dropdown-toggle btn btn-light" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Events
+                  </Link>
+                  <ul className="dropdown-menu" aria-labelledby="eventsDropdown">
+                    <li><Link className='dropdown-item' to="/event-home">Event Home</Link></li>
+                    <li><Link className="dropdown-item" to="/register-attendee">Register as Attendee</Link></li>
+                  </ul>
+                </li>
+                <li className="nav-item"><Link className="nav-link" to="/profile">Profile</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/analytics">Analytics</Link></li>
+                <li className="nav-item"><button className="btn btn-light border border-primary rounded-pill text-primary py-2 px-4 me-4" onClick={handleLogout}>Logout</button></li>
               </>
             ) : (
-              <div className="d-flex">
-                <Link className="btn btn-light border border-primary rounded-pill text-primary py-2 px-4 me-4" to="/login">Log In</Link>
-                <Link className="btn btn-primary rounded-pill text-white py-2 px-4" to="/register">Sign Up</Link>
-              </div>
+              <>
+                <li className="nav-item"><Link className="btn btn-light border border-primary rounded-pill text-primary py-2 px-4 me-4" to="/login">Log In</Link></li>
+                <li className="nav-item"><Link className="btn btn-primary rounded-pill text-white py-2 px-4" to="/register">Sign Up</Link></li>
+              </>
             )}
-          </div>
-          {isLoggedIn && (
-            <div className="d-flex">
-              <button className="btn btn-light border border-primary rounded-pill text-primary py-2 px-4 me-4" onClick={handleLogout}>Logout</button>
-            </div>
-          )}
+          </ul>
         </div>
       </nav>
     </div>

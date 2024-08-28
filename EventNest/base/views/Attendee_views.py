@@ -17,11 +17,24 @@ class register_attendee(APIView):
                 event = Event.objects.get(id=event_id)
             except Event.DoesNotExist:
                 return Response({'error': 'Event not found.'}, status=status.HTTP_404_NOT_FOUND)
-
+            
             if AttendeeRegistration.objects.filter(event=event, attendee=request.user).exists():
                 return Response({'error': 'User already registered for this event.'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
             attendee_registration = AttendeeRegistration.objects.create(event=event, attendee=request.user)
+
+            # Create an EventAttendance record for this new registration
+            EventAttendance.objects.get_or_create(
+                event=event,
+                user=request.user,  # Ensure the 'user' field is correctly provided
+                attendee=attendee_registration,
+                defaults={
+                    'status': 'absent',
+                    'check_in_time': None,
+                    'check_out_time': None
+                }
+            )
+
             serializer = AttendeeRegistrationSerializer(attendee_registration)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 

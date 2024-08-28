@@ -5,7 +5,7 @@ import RegisterUser from './components/User/RegisterUser';
 import LoginUser from './components/User/LoginUser';
 import ListUser from './components/User/ListUser';
 import Header from './components/Header';
-import Footer from './components/Footer';
+// import Footer from './components/Footer';
 import Home from './components/Home';
 import EditUser from './components/User/EditUser';
 import UserProfile from './components/User/UserProfile';
@@ -33,7 +33,7 @@ function App() {
 
           <Route path='/event-home' element={<EventHome/>}/>
           <Route path="/create-event" element={<Createvent/>} />
-          <Route path='/edit/:id' element={<EventEdit/>}/>
+          <Route path="/edit-event/:id" element={<EventEdit/>}/>
           <Route path='/analytics' element={<Analytics/>} />
 
           <Route path="/register-attendee" element={<RegisterAttendee/>}/>
@@ -45,7 +45,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
-      <Footer/>
+      {/* <Footer/> */}
 
     </Router>
   );

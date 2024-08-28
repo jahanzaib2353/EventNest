@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Alert, Spinner, Form } from 'react-bootstrap';
+import { Table, Button, Alert, Spinner, Form, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is included
+
 
 export default function EventList() {
     const [eventList, setEventList] = useState([]);
@@ -48,7 +50,7 @@ export default function EventList() {
     }, []);
 
     const handleEdit = (id) => {
-        navigate(`/edit/${id}`);
+        navigate(`/edit-event/${id}`);
     };
 
     const deleteEvent = async (id) => {
@@ -64,18 +66,20 @@ export default function EventList() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            if (response.status === 204) {
+    
+            if (response.status === 204 || response.status === 200) { // Check for both 204 and 200 status
                 setEventList(eventList.filter(event => event.id !== id));
-                setSuccess('Event deleted successfully');
+                setSuccess(response.data.message || 'Event deleted successfully'); // Display backend message if available
             } else {
                 setError('Failed to delete event. Please try again.');
             }
         } catch (err) {
-            const errorMessage = err.response?.data?.error || 'An unexpected error occurred.';
+            const errorMessage = err.response?.data?.detail || 'An unexpected error occurred.';
             setError(errorMessage);
             console.error('Error during deleting event:', err.response ? err.response.data : err.message);
         }
     };
+    
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -136,19 +140,21 @@ export default function EventList() {
     };
 
     return (
-        <div>
-            <h2>Events</h2>
+        <Container className='my-4'>
+            <h2 className='mt-5 text-center text-dark'>Events</h2>
             {loading ? (
-                <Spinner animation="border" />
+                <div className="text-center">
+                    <Spinner animation="border" />
+                </div>
             ) : (
                 <>
                     {error && <Alert variant="danger">{error}</Alert>}
                     {success && <Alert variant="success">{success}</Alert>}
                     {eventList.length > 0 ? (
-                        <Table striped bordered hover>
+                        <Table striped bordered hover variant="light">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Event ID</th>
                                     <th>Title</th>
                                     <th>Description</th>
                                     <th>Virtual Venue</th>
@@ -179,8 +185,8 @@ export default function EventList() {
                                             )}
                                         </td>
                                         <td>
-                                            <Button variant="danger" onClick={() => deleteEvent(event.id)}>Delete</Button>
-                                            <Button variant="primary" onClick={() => handleEdit(event.id)} className="mx-2">Edit</Button>
+                                            <Button variant="danger" onClick={() => deleteEvent(event.id)} className='me-2'>Delete</Button>
+                                            <Button variant="primary" onClick={() => handleEdit(event.id)} className='me-2'>Edit</Button>
 
                                             <Form>
                                                 <Form.Group controlId={`formFile-${event.id}`}>
@@ -197,7 +203,7 @@ export default function EventList() {
                                                     </Form.Text>
                                                 </Form.Group>
                                                 <Button 
-                                                    variant="primary" 
+                                                    variant="success" 
                                                     onClick={() => handleFileUpload(event.id)}
                                                     disabled={!selectedFile || selectedEventId !== event.id}
                                                 >
@@ -210,14 +216,18 @@ export default function EventList() {
                             </tbody>
                         </Table>
                     ) : (
-                        <p>No events found.</p>
+                        <p className='text-center'>No events found.</p>
                     )}
-                    <Link to={'/register-attendee'}><Button variant='primary'>Register Attendee</Button></Link>
-
-                    <br />
-                    <Link to={'/report'}><Button variant='light' className='my-3'>Attendance</Button></Link>
+                    <Row className='my-3'>
+                        <Col className='text-center'>
+                           
+                            <Link to={'/report'}>
+                                <Button variant='secondary'>Attendance Report</Button>
+                            </Link>
+                        </Col>
+                    </Row>
                 </>
             )}
-        </div>
+        </Container>
     );
 }

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Alert, Table, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 export default function UserProfile() {
     const [user, setUser] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
-        async function fetchUserProfile() {
+        const fetchUserProfile = async () => {
             try {
                 const token = localStorage.getItem('token');
+                console.log('Fetched token:', token); // Debugging token
+
                 if (!token) {
                     setError('Please login to view your profile.');
                     setLoading(false);
@@ -21,21 +23,28 @@ export default function UserProfile() {
 
                 const response = await axios.get('/api/users/profile/', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
                 });
 
-                setUser(response.data);
+                console.log('Profile response:', response.data); // Debugging response
+
+                if (response.data && response.data.data) {
+                    setUser(response.data.data); // Setting the user data if available
+                } else {
+                    setError('Failed to load profile data.');
+                }
             } catch (err) {
                 setError(err.response?.data?.error || 'Failed to fetch user profile.');
                 console.error('Error fetching profile:', err.response ? err.response.data : err.message);
             } finally {
                 setLoading(false);
             }
-        }
+        };
 
         fetchUserProfile();
-    }, []);
+    }, []); // useEffect will run only once after the component mounts
 
     const handleEditClick = () => {
         if (user && user.id) {
@@ -47,8 +56,8 @@ export default function UserProfile() {
     };
 
     return (
-        <div className="container my-5 ">
-            <h2 className='text-center'>User Profile</h2>
+        <div className="container my-5">
+            <h2 className="text-center">User Profile</h2>
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (

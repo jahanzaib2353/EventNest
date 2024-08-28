@@ -8,7 +8,7 @@ from base.permissions import IsAttendee
 from django.shortcuts import render
 
 # Create your views here.
-
+#view is typically used to issue a pair of tokens (access and refresh) 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
     
@@ -27,7 +27,9 @@ def home(request):  # This function will not be included in coverage reports
 
 class RegisterEventUser(APIView):
     def post(self, request):
+        # This attribute contains the parsed content of the request body.
         data = request.data
+        
         serializer = EventUserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()  # Save the user instance

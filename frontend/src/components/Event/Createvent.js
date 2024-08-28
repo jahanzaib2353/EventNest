@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Form, Button, Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 export default function Createvent() {
@@ -9,9 +8,9 @@ export default function Createvent() {
     const [virtualVenue, setVirtualVenue] = useState('');
     const [date, setDate] = useState('');
     const [duration, setDuration] = useState('');
+    const [organizer, setOrganizer] = useState('');
     const [error, setError] = useState('');
-    const [organizer, setOrganizer] = useState('')
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleCreate = async (e) => {
         e.preventDefault();
@@ -31,102 +30,100 @@ export default function Createvent() {
                 }
             });
 
-            // Handle successful registration
             console.log('Event Registration successful:', response.data);
-
-            // Optionally, redirect or show success message
         } catch (err) {
-            const errorMessage = err.response?.data?.detail || 'you are not organizer.';
-            setError(errorMessage); // Display error message
+            const errorMessage = err.response?.data?.detail || 'You are not an organizer.';
+            setError(errorMessage);
             console.error('Error during creating event:', err.response ? err.response.data : err.message);
         }
         
-        navigate('/event-home')
+        navigate('/event-home');
     };
 
-  return (
-    <div>
-      <Container className="mt-3">
-            <Row className="justify-content-center">
-                <Col md={6}>
-                    <h2>Create Event</h2>
-                    <Form onSubmit={handleCreate}>
-                        <Form.Group controlId="formTitle">
-                            <Form.Label>Title</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter Title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
+    return (
+        <div className="auth-wrapper">
+            <div className="auth-inner py-10">
+                <form onSubmit={handleCreate}>
+                    <h3 className='py-10'>Create Event</h3>
 
-                        <Form.Group controlId="formDescription">
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                placeholder="Enter Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                               
-                            />
-                        </Form.Group>
+                    <div className="mb-3">
+                        <label>Title</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter Title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                        <Form.Group controlId="formVirtualVenue">
-                            <Form.Label>Virtual Venue</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="https://google.com"
-                                value={virtualVenue}
-                                onChange={(e) => setVirtualVenue(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
+                    <div className="mb-3">
+                        <label>Description</label>
+                        <textarea
+                            className="form-control"
+                            placeholder="Enter Description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
 
-                        <Form.Group controlId="formDate">
-                            <Form.Label>Date</Form.Label>
-                            <Form.Control
-                                type="date"
-                                placeholder="Enter Date"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
+                    <div className="mb-3">
+                        <label>Virtual Venue</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="https://google.com"
+                            value={virtualVenue}
+                            onChange={(e) => setVirtualVenue(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                        <Form.Group controlId="formDuration">
-                            <Form.Label>Duration</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter Duration"
-                                value={duration}
-                                onChange={(e) => setDuration(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formOrganizer">
-                            <Form.Label>Organizer</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter organizer id"
-                                value={organizer}
-                                onChange={(e) => setOrganizer(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
+                    <div className="mb-3">
+                        <label>Date</label>
+                        <input
+                            type="date"
+                            className="form-control"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                        <Button className='mt-3' variant="primary" type="submit">
+                    <div className="mb-3">
+                        <label>Duration</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter Duration"
+                            value={duration}
+                            onChange={(e) => setDuration(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Organizer</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter Organizer ID"
+                            value={organizer}
+                            onChange={(e) => setOrganizer(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {error && <div className="alert alert-danger">{error}</div>}
+
+                    <div className="d-grid">
+                        <button type="submit" className="btn btn-primary">
                             Create Event
-                        </Button>
-                    </Form>
-
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                </Col>
-            </Row>
-        </Container>
-        
-
-    </div>
-  )
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
 }

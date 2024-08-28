@@ -9,15 +9,17 @@ from base.models import Event, AttendeeRegistration
 
 class CreateEvent(APIView):
     permission_classes = [IsAuthenticated, IsOrganizer]
+
     def post(self, request):
         data = request.data
         serializer = EventSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()  # Pass the organizer as the logged-in user
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({'error': 'Bad input request'}, status=status.HTTP_400_BAD_REQUEST)
-        
+            # Print validation errors for debugging
+            return Response({'error': 'Bad input request', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
         
 class getEventById(APIView):
     permission_classes = [IsAuthenticated, IsOrganizer]
@@ -27,7 +29,7 @@ class getEventById(APIView):
             serializer = EventSerializer(event)
             return Response(serializer.data)
         except Event.DoesNotExist:
-            return Response({"error": "Event not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Event not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
     def put(self, request, event_id):
@@ -43,7 +45,7 @@ class getEventById(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
         else:
             return Response({"error": "You are not authorized to update this event."}, status=status.HTTP_403_FORBIDDEN)
         
@@ -57,7 +59,7 @@ class getEventById(APIView):
             except Event.DoesNotExist:
                 return Response({'error': "Event not found"}, status=404)
         else:
-            return Response({'error': "You are not authorized to delete this event"}, status=403)
+            return Response({'error': "You are not authorized to delete this event"}, status=status.HTTP_403_FORBIDDEN)
 
 class getEvents(APIView):
     permission_classes = [IsAuthenticated]
@@ -117,18 +119,21 @@ class UploadFile(APIView):
     
 
 class EventAnalyticsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,  IsOrganizer]
+
     def get(self, request):
-        # Aggregate event data
         events = Event.objects.all()
         analytics_data = []
-        
+
         for event in events:
             attendee_count = AttendeeRegistration.objects.filter(event=event).count()
             analytics_data.append({
+                'id': event.id,
                 'title': event.title,
                 'attendees': attendee_count,
             })
 
+        # Debugging: Log analytics data to ensure it's correct
+        print('Analytics Data:', analytics_data)
+
         return Response(analytics_data, status=status.HTTP_200_OK)
-    

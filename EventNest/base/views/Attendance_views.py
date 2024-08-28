@@ -1,4 +1,4 @@
-from base.models import EventAttendance,Event, AttendeeRegistration
+from base.models import EventAttendance, Event, AttendeeRegistration
 from base.serializers import EventAttendanceSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -11,13 +11,19 @@ class EventAttendanceView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, event_id):
-        try:
-            attendance = EventAttendance.objects.get(id=event_id)
-            serializer = EventAttendanceSerializer(attendance)
-            return Response(serializer.data)
-        except EventAttendance.DoesNotExist:
-            return Response({'error': 'EventAttendance not found.'}, status=status.HTTP_404_NOT_FOUND)
-
+            if request.user.status == 'organizer':
+                try:
+                    # Get all attendance records for the event
+                    attendance = EventAttendance.objects.filter(event__id=event_id)
+                    if not attendance.exists():
+                        return Response({'error': 'No attendance records found for this event.'}, status=status.HTTP_404_NOT_FOUND)
+                    
+                    serializer = EventAttendanceSerializer(attendance, many=True)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                except Exception as e:
+                    return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'Only organizers can access this resource.'}, status=status.HTTP_403_FORBIDDEN)
 
     def post(self, request, event_id):
         user = request.user
@@ -31,8 +37,14 @@ class EventAttendanceView(APIView):
         except AttendeeRegistration.DoesNotExist:
             return Response({'error': 'User not registered for this event.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        attendance = EventAttendance.objects.get_or_create(event=event, user=user, attendee=attendee_registration)
+        # Get or create the attendance record
+        attendance, created = EventAttendance.objects.get_or_create(
+            event=event,
+            attendee=attendee_registration,
+            defaults={'status': 'absent'}  # Set default status
+        )
 
+        # Only update status if it is not already 'present'
         if attendance.status == 'present':
             return Response({'error': 'User already marked as present.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -42,22 +54,17 @@ class EventAttendanceView(APIView):
 
         serializer = EventAttendanceSerializer(attendance)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
 
 
-class Attendance(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def get(self, request):
-        try:
-            attendance = EventAttendance.objects.all()
-            serializer = EventAttendanceSerializer(attendance, many=True)
-            return Response(serializer.data)
-        except EventAttendance.DoesNotExist:
-            return Response({'error': 'EventAttendance not found.'}, status=status.HTTP_404_NOT_FOUND)
+# class Attendance(APIView):
+#     permission_classes = [IsAuthenticated, IsOrganizer]
+
+#     def get(self, request):
+#         attendance = EventAttendance.objects.all()
+#         serializer = EventAttendanceSerializer(attendance, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-#now we want to get attendence report on specific event
 class AttendenceReport(APIView):
     permission_classes=[IsAuthenticated, IsOrganizer]
     def get(self, request, event_id):  
@@ -82,5 +89,3 @@ class AttendenceReport(APIView):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
-
-

@@ -1,3 +1,4 @@
+// Home.js
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
@@ -15,16 +16,14 @@ export default function Home() {
           return;
         }
 
-        const response = await axios.get('api/users/profile/', {
+        const response = await axios.get('/api/users/profile/', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          withCredentials: true,
         });
 
-        console.log('API Response:', response.data); // Debugging
-        const username = response.data.data.username || 'Guest'; // Adjust this line based on the API response
+        const username = response.data.data.username || 'Guest';
         setName(username);
         setIsLoggedIn(true);
       } catch (err) {
@@ -38,13 +37,18 @@ export default function Home() {
 
   return (
     <div className="homepage">
+      <div className="hero-section text-center text-white">
+        <h1>Welcome to Event Management</h1>
+        <p>Create and manage your events effortlessly</p>
+      </div>
       <Container fluid>
         <Row className="align-items-center">
           <Col md={6} className="text-content">
-            <h1>{isLoggedIn ? `Hi, ${name}` : 'You are not logged in'}</h1>
-            <p>
-              Win new customers with the #1 email marketing and automations brand* that recommends ways to get more opens, clicks, and sales.
-            </p>
+            <h1>{isLoggedIn ? `Hi, ${name}` : 'Welcome to Our Platform'}</h1>
+            
+            {isLoggedIn && (
+              <p className="welcome-msg">We're glad to have you back, {name}!</p>
+            )}
           </Col>
           <Col md={6} className="image-container">
             <img 
